@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/json"
-	keyset "flashcat.cloud/categraf/set/key"
 	"io"
 	"log"
 	"net"
@@ -16,6 +15,8 @@ import (
 	"strings"
 	"time"
 
+	keyset "flashcat.cloud/categraf/set/key"
+
 	cpuUtil "github.com/shirou/gopsutil/v4/cpu"
 
 	"flashcat.cloud/categraf/config"
@@ -24,6 +25,7 @@ import (
 )
 
 const collinterval = 3
+const maxResponsePreviewBytes = 512
 
 type (
 	HeartbeatResponse struct {
@@ -209,10 +211,17 @@ func work(ps *system.SystemPS, client *http.Client) {
 		log.Println("D! heartbeat response:", string(bs), "status code:", res.StatusCode)
 	}
 
+	if !looksLikeJSON(bs) {
+		log.Printf("W! heartbeat response is not json, status code: %d, content-type: %q, response: %s",
+			res.StatusCode, res.Header.Get("Content-Type"), responsePreview(bs))
+		return
+	}
+
 	hr := HeartbeatResponse{}
 	err = json.Unmarshal(bs, &hr)
 	if err != nil {
-		log.Println("W! failed to unmarshal heartbeat response:", err)
+		log.Printf("W! failed to unmarshal heartbeat response: %v, status code: %d, content-type: %q, response: %s",
+			err, res.StatusCode, res.Header.Get("Content-Type"), responsePreview(bs))
 		return
 	}
 	if len(hr.Data.NewVersion) != 0 && len(hr.Data.UpdateURL) != 0 && hr.Data.NewVersion != shortVersion && hr.Data.NewVersion != config.Version {
@@ -240,6 +249,20 @@ func work(ps *system.SystemPS, client *http.Client) {
 		}
 		log.Printf("update categraf(%s) from %s success, new version: %s", version(), hr.Data.UpdateURL, hr.Data.NewVersion)
 	}
+}
+
+func looksLikeJSON(bs []byte) bool {
+	trimmed := bytes.TrimSpace(bs)
+	return len(trimmed) > 0 && (trimmed[0] == '{' || trimmed[0] == '[')
+}
+
+func responsePreview(bs []byte) string {
+	trimmed := strings.TrimSpace(string(bs))
+	if len(trimmed) <= maxResponsePreviewBytes {
+		return trimmed
+	}
+
+	return trimmed[:maxResponsePreviewBytes] + "...(truncated)"
 }
 
 func memUsage(ps *system.SystemPS) float64 {

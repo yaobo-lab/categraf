@@ -1,4 +1,5 @@
 # # collect interval
+# 适用于 TDengine  tdengine-tsdb-oss-3.4.1.6
 # interval = 15
 
 [[instances]]

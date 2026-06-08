@@ -181,7 +181,7 @@ func stringToMemoryUse(str string) float64 {
 	str = strings.ReplaceAll(str, " ", "")
 
 	var total float64 = 0
-	if strings.Index(str, "G") >= 0 {
+	if strings.Contains(str, "G") {
 		str = strings.ReplaceAll(str, "G", "")
 		size, err := strconv.ParseFloat(str, 64)
 		if err == nil {
@@ -198,7 +198,7 @@ func stringToUptime(f string) int {
 	total := 0
 	for _, value := range values {
 
-		if strings.Index(value, "days") >= 0 {
+		if strings.Contains(value, "days") {
 			vstr := strings.ReplaceAll(value, "days", "")
 			v, err := strconv.Atoi(vstr)
 			if err == nil {
@@ -206,7 +206,7 @@ func stringToUptime(f string) int {
 			}
 		}
 
-		if strings.Index(value, "hours") >= 0 {
+		if strings.Contains(value, "hours") {
 			vstr := strings.ReplaceAll(value, "hours", "")
 			v, err := strconv.Atoi(vstr)
 			if err == nil {
@@ -214,7 +214,7 @@ func stringToUptime(f string) int {
 			}
 		}
 
-		if strings.Index(value, "minutes") >= 0 {
+		if strings.Contains(value, "minutes") {
 			vstr := strings.ReplaceAll(value, "minutes", "")
 			v, err := strconv.Atoi(vstr)
 			if err == nil {
@@ -222,7 +222,7 @@ func stringToUptime(f string) int {
 			}
 		}
 
-		if strings.Index(value, "seconds") >= 0 {
+		if strings.Contains(value, "seconds") {
 			vstr := strings.ReplaceAll(value, "seconds", "")
 			v, err := strconv.Atoi(vstr)
 			if err == nil {

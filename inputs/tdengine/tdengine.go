@@ -210,9 +210,10 @@ func (ins *Instance) getMNODES(taos *sql.DB, slist *types.SampleList) {
 			role        string
 			status      string
 			create_time string
+			role_time   string
 		}
 
-		err := rows.Scan(&r.id, &r.endpoint, &r.role, &r.status, &r.create_time)
+		err := rows.Scan(&r.id, &r.endpoint, &r.role, &r.status, &r.create_time, &r.role_time)
 
 		if err != nil {
 			fmt.Println("getMNODES scan error:\n", err)
@@ -223,6 +224,8 @@ func (ins *Instance) getMNODES(taos *sql.DB, slist *types.SampleList) {
 		labels["role"] = r.role
 		labels["endpoint"] = r.endpoint
 		labels["status"] = r.status
+		labels["create_time"] = r.create_time
+		labels["role_time"] = r.role_time
 		status := 1
 		if r.role == "offline" {
 			status = 0
@@ -307,7 +310,7 @@ func (ins *Instance) getDNODES(taos *sql.DB, slist *types.SampleList) {
 			note           string
 		}
 
-		err := rows.Scan(&r.id, &r.endpoint, &r.vnodes, &r.support_vnodes, &r.status, &r.create_time, &r.note)
+		err := rows.Scan(&r.id, &r.endpoint, &r.vnodes, &r.support_vnodes, &r.status, &r.create_time, &r.reboot_time, &r.note)
 		if err != nil {
 			fmt.Println("getDNODES scan error:\n", err)
 			return
