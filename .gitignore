@@ -10,5 +10,5 @@ docker/categraf
 /meta
 /nohup.out
 /embedded
-
+/dist/
 conf_local/
