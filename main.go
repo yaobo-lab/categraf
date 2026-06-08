@@ -78,12 +78,11 @@ func initLog(output string) {
 }
 
 func main() {
+
+	fmt.Println("current version:", config.Version)
+
 	flag.Parse()
 
-	if *showVersion {
-		fmt.Println(config.Version)
-		os.Exit(0)
-	}
 	if *install || *remove || *start || *stop || *status || *update {
 		err := serviceProcess()
 		if err != nil {
