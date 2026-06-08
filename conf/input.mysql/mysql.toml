@@ -26,7 +26,6 @@
 # gather_schema_size = true
 # gather_table_size = false
 # gather_system_table_size = false
-# gather_slave_status = true
 
 # MGR metrics
 # gather_group_replication = true
