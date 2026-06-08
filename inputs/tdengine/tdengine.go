@@ -303,6 +303,7 @@ func (ins *Instance) getDNODES(taos *sql.DB, slist *types.SampleList) {
 			support_vnodes string
 			status         string
 			create_time    string
+			reboot_time    string
 			note           string
 		}
 
@@ -316,6 +317,8 @@ func (ins *Instance) getDNODES(taos *sql.DB, slist *types.SampleList) {
 		labels["vnodes"] = r.vnodes
 		labels["support_vnodes"] = r.support_vnodes
 		labels["endpoint"] = r.endpoint
+		labels["create_time"] = r.create_time
+		labels["reboot_time"] = r.reboot_time
 		labels["status"] = r.status
 		status := 0
 		if r.status == "ready" {

@@ -238,7 +238,6 @@ func (ins *Instance) Gather(slist *types.SampleList) {
 	ins.gatherSchemaSize(slist, db, tags)
 	ins.gatherTableSize(slist, db, tags, false)
 	ins.gatherTableSize(slist, db, tags, true)
-	ins.gatherSlaveStatus(slist, db, tags)
 	ins.gatherCustomQueries(slist, db, tags)
 	ins.gatherBinaryLogs(slist, db, tags)
 	ins.gatherReplicaStatus(slist, db, tags)
