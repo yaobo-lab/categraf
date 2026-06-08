@@ -1,0 +1,19 @@
+# # collect interval
+# interval = 15
+
+[[instances]]
+# labels = { instance="info-iot-tsdb"}
+# address = "192.168.1.100:6041"
+# user="root"
+# password="taosdata"
+
+# [[instances.queries]]
+# mesurement = ""
+# metric_fields = [ "db_unready_total"]
+# timeout = "10s"
+
+# #select name,ntables,`vgroups`,`replica`,`keep`,status from information_schema.ins_databases;
+# #https://docs.taosdata.com/taos-sql/meta/#%E5%85%83%E6%95%B0%E6%8D%AE
+# request = '''
+# select count(*) as db_unready_total from information_schema.ins_databases where status <> 'ready';
+# '''

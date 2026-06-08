@@ -1,0 +1,16 @@
+
+# Broker 基本信息
+# https://www.emqx.io/docs/zh/v4.4/advanced/http-api.html#broker-%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF
+# # collect interval
+# interval = 15
+ 
+[[instances]]
+# labels = { instance="emqx@192.168.1.100"}
+# api = "http://192.168.1.100:8081/api/v4"
+# user="admin"
+# password="public"
+# #集群节点名称
+# nodename="emqx@192.168.1.100"
+# enable_meterics=true
+
+ 
