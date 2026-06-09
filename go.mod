@@ -15,7 +15,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gobwas/glob v0.2.3
 	github.com/gogo/protobuf v1.3.2
-	github.com/golang/protobuf v1.5.4
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4
 	github.com/gosnmp/gosnmp v1.37.0
 	github.com/hashicorp/consul/api v1.31.0
