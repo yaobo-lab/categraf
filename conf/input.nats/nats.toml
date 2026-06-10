@@ -1,3 +1,5 @@
+# 适用于  nats-server-v2.14.1 版本
+
 # [[instances]]
 # server = "http://10.0.1.115:8222"
 # labels = { instance="10.0.1.115"}
