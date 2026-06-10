@@ -1,36 +1,15 @@
-# Provides metrics about the state of a NATS server
-# This plugin does NOT support FreeBSD
-# # collect interval
-# interval = 15
-
-[[instances]]
-## The address of the monitoring endpoint of the NATS server
-# server = "http://localhost:8222"
-server = ""
-
-## Set response_timeout (default 5 seconds)
-response_timeout = "5s"
-
-## interval = global.interval * interval_times
-# interval_times = 1
-
-
-
-# # # collect interval
-# interval = 15
-
+# [[instances]]
+# server = "http://10.0.1.115:8222"
+# labels = { instance="10.0.1.115"}
+# response_timeout = "5s"
  
 # [[instances]]
-# address = "http://10.0.1.5:8222"
-# labels = { instance="10.0.1.5"}
-
-
-# [[instances]]
-# address = "http://10.0.1.6:8222"
-# labels = { instance="10.0.1.6"}
-
-
+# address = "http://10.0.1.116:8222"
+# labels = { instance="10.0.1.116"}
+# response_timeout = "5s"
 
 # [[instances]]
-# address = "http://10.0.1.7:8222"
-# labels = { instance="10.0.1.7"}
+# address = "http://10.0.1.117:8222"
+# labels = { instance="10.0.1.117"}
+# response_timeout = "5s"
+
