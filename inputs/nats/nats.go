@@ -154,7 +154,8 @@ func (ins *Instance) getJetStream(slist *types.SampleList) {
 		log.Println("E! error parseURL", err)
 		return
 	}
-	address.Path = path.Join(address.Path, "jsz?consumers=true")
+	address.Path = path.Join(address.Path, "jsz")
+	address.RawQuery = "consumers=true"
 
 	resp, err := ins.client.Get(address.String())
 	if err != nil {
@@ -172,7 +173,7 @@ func (ins *Instance) getJetStream(slist *types.SampleList) {
 	stats := new(gnatsd.JSInfo)
 	err = json.Unmarshal(bytes, &stats)
 	if err != nil {
-		log.Println("E! error parsing response", err)
+		log.Println("E! error parsing response，body:", string(bytes), "err:", err.Error())
 		return
 	}
 
