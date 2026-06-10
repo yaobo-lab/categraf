@@ -2,17 +2,20 @@ package nats
 
 import (
 	"encoding/json"
-	"flashcat.cloud/categraf/config"
-	"flashcat.cloud/categraf/inputs"
-	"flashcat.cloud/categraf/types"
-	gnatsd "github.com/nats-io/nats-server/v2/server"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"path"
 	"time"
+
+	"flashcat.cloud/categraf/config"
+	"flashcat.cloud/categraf/inputs"
+	"flashcat.cloud/categraf/types"
+	gnatsd "github.com/nats-io/nats-server/v2/server"
 )
+
+//https://docs.nats.io/running-a-nats-service/nats_admin/monitoring#general-information-varz
 
 const inputName = "nats"
 
@@ -46,8 +49,7 @@ func (n *Nats) GetInstances() []inputs.Instance {
 type Instance struct {
 	Server          string          `toml:"server"`
 	ResponseTimeout config.Duration `toml:"response_timeout"`
-
-	client *http.Client
+	client          *http.Client
 	config.HTTPCommonConfig
 	config.InstanceConfig
 }
@@ -67,35 +69,56 @@ func (ins *Instance) Init() error {
 	return err
 }
 
+func (ins *Instance) createHTTPClient() (*http.Client, error) {
+	tr := &http.Transport{
+		ResponseHeaderTimeout: time.Duration(ins.ResponseTimeout),
+	}
+
+	client := &http.Client{
+		Transport: tr,
+		Timeout:   time.Duration(ins.ResponseTimeout),
+	}
+	return client, nil
+}
+
 func (ins *Instance) Gather(slist *types.SampleList) {
+	err := ins.getVarz(slist)
+	if err != nil {
+		return
+	}
+	ins.getJetStream(slist)
+}
+
+// https://demo.nats.io:8222/varz
+func (ins *Instance) getVarz(slist *types.SampleList) error {
 	if ins.DebugMod {
 		log.Println("D! nats... server:", ins.Server)
 	}
 	address, err := url.Parse(ins.Server)
 	if err != nil {
 		log.Println("E! error parseURL", err)
-		return
+		return err
 	}
 	address.Path = path.Join(address.Path, "varz")
 
 	resp, err := ins.client.Get(address.String())
 	if err != nil {
 		log.Println("E! error while polling", address.String(), err)
-		return
+		return err
 	}
 	defer resp.Body.Close()
 
 	bytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("E! error reading body", err)
-		return
+		return err
 	}
 
 	stats := new(gnatsd.Varz)
 	err = json.Unmarshal(bytes, &stats)
 	if err != nil {
 		log.Println("E! error parsing response", err)
-		return
+		return err
 	}
 
 	fields := map[string]interface{}{
@@ -113,21 +136,61 @@ func (ins *Instance) Gather(slist *types.SampleList) {
 		"slow_consumers":    stats.SlowConsumers,
 		"routes":            stats.Routes,
 		"remotes":           stats.Remotes,
+		"healthz":           1,
 	}
 	tags := map[string]string{
 		"server": ins.Server,
 	}
 	slist.PushSamples(inputName, fields, tags)
+	return nil
 }
 
-func (ins *Instance) createHTTPClient() (*http.Client, error) {
-	tr := &http.Transport{
-		ResponseHeaderTimeout: time.Duration(ins.ResponseTimeout),
+// https://docs.nats.io/running-a-nats-service/nats_admin/monitoring#jetstream-information-jsz
+// https://demo.nats.io:8222/jsz?consumers=true
+func (ins *Instance) getJetStream(slist *types.SampleList) {
+
+	address, err := url.Parse(ins.Server)
+	if err != nil {
+		log.Println("E! error parseURL", err)
+		return
+	}
+	address.Path = path.Join(address.Path, "jsz?consumers=true")
+
+	resp, err := ins.client.Get(address.String())
+	if err != nil {
+		log.Println("E! error while polling", address.String(), err)
+		return
+	}
+	defer resp.Body.Close()
+
+	bytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("E! error reading body", err)
+		return
 	}
 
-	client := &http.Client{
-		Transport: tr,
-		Timeout:   time.Duration(ins.ResponseTimeout),
+	stats := new(gnatsd.JSInfo)
+	err = json.Unmarshal(bytes, &stats)
+	if err != nil {
+		log.Println("E! error parsing response", err)
+		return
 	}
-	return client, nil
+
+	fields := map[string]interface{}{
+		"streams_total":   stats.Streams,   //streams 数量
+		"consumers_total": stats.Consumers, //consumers 数量
+		"msg_total":       stats.Messages,  //消息数量
+	}
+	if len(stats.AccountDetails) == 0 {
+		return
+	}
+
+	slist.PushSamples(inputName, fields)
+	for _, item := range stats.AccountDetails[0].Streams {
+		tags := map[string]string{"stream_name": item.Name}
+		//每个流 ：消息数量
+		slist.PushSample(inputName, "stream_msg_count", item.State.Msgs, tags)
+		//每个流 ：消费者数量
+		slist.PushSample(inputName, "stream_consumer_count", item.State.Consumers, tags)
+	}
 }

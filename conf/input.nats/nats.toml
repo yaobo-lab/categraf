@@ -13,3 +13,24 @@ response_timeout = "5s"
 
 ## interval = global.interval * interval_times
 # interval_times = 1
+
+
+
+# # # collect interval
+# interval = 15
+
+ 
+# [[instances]]
+# address = "http://10.0.1.5:8222"
+# labels = { instance="10.0.1.5"}
+
+
+# [[instances]]
+# address = "http://10.0.1.6:8222"
+# labels = { instance="10.0.1.6"}
+
+
+
+# [[instances]]
+# address = "http://10.0.1.7:8222"
+# labels = { instance="10.0.1.7"}
