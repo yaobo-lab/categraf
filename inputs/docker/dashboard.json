@@ -1,0 +1,910 @@
+{
+  "name": "Docker",
+  "tags": "docker,categraf",
+  "configs": {
+    "version": "2.0.0",
+    "links": [],
+    "var": [
+      {
+        "name": "engine_host",
+        "type": "query",
+        "definition": "label_values(docker_n_containers, engine_host)",
+        "multi": true,
+        "allOption": true
+      },
+      {
+        "name": "container_name",
+        "type": "query",
+        "definition": "label_values(docker_container_cpu_usage_percent{engine_host=~\"$engine_host\",cpu=\"cpu-total\"}, container_name)",
+        "multi": true,
+        "allOption": true
+      }
+    ],
+    "panels": [
+      {
+        "type": "row",
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120001",
+        "name": "Docker 概览",
+        "collapsed": true,
+        "layout": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120001",
+          "isResizable": false
+        }
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "max(docker_up)",
+            "legend": "docker_up"
+          }
+        ],
+        "name": "Docker UP",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "background",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {},
+          "valueMappings": [
+            {
+              "type": "special",
+              "match": {
+                "special": 1
+              },
+              "result": {
+                "text": "UP",
+                "color": "#417505"
+              }
+            },
+            {
+              "type": "special",
+              "match": {
+                "special": 0
+              },
+              "result": {
+                "text": "DOWN",
+                "color": "#D0021B"
+              }
+            }
+          ]
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 0,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120002",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120002"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "count(docker_n_containers{engine_host=~\"$engine_host\"})",
+            "legend": "engine hosts"
+          }
+        ],
+        "name": "Engine 数量",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "value",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {}
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 3,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120003",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120003"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum(docker_n_containers{engine_host=~\"$engine_host\"})",
+            "legend": "containers"
+          }
+        ],
+        "name": "容器总数",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "value",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {}
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 6,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120004",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120004"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum(docker_n_containers_running{engine_host=~\"$engine_host\"})",
+            "legend": "running"
+          }
+        ],
+        "name": "运行中容器",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "value",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {}
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 9,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120005",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120005"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum(docker_n_containers_stopped{engine_host=~\"$engine_host\"})",
+            "legend": "stopped"
+          }
+        ],
+        "name": "停止容器",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "value",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {}
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 12,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120006",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120006"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum(docker_n_images{engine_host=~\"$engine_host\"})",
+            "legend": "images"
+          }
+        ],
+        "name": "镜像数量",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "value",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {}
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 15,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120007",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120007"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum(docker_n_cpus{engine_host=~\"$engine_host\"})",
+            "legend": "cpus"
+          }
+        ],
+        "name": "CPU 核数",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "value",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {}
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 18,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120008",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120008"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum(docker_memory_total{engine_host=~\"$engine_host\"})",
+            "legend": "memory"
+          }
+        ],
+        "name": "宿主总内存",
+        "custom": {
+          "textMode": "value",
+          "colorMode": "value",
+          "calc": "lastNotNull",
+          "colSpan": 1,
+          "textSize": {}
+        },
+        "options": {
+          "standardOptions": {
+            "unit": "bytes"
+          }
+        },
+        "version": "2.0.0",
+        "type": "stat",
+        "layout": {
+          "h": 3,
+          "w": 3,
+          "x": 21,
+          "y": 1,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120009",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120009"
+      },
+      {
+        "type": "row",
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120010",
+        "name": "容器资源",
+        "collapsed": true,
+        "layout": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 4,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120010",
+          "isResizable": false
+        }
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "topk(10, docker_container_cpu_usage_percent{engine_host=~\"$engine_host\",container_name=~\"$container_name\",cpu=\"cpu-total\"})",
+            "legend": "{{engine_host}} / {{container_name}}"
+          }
+        ],
+        "name": "CPU 使用率 Top10",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {
+            "unit": "percent"
+          },
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.3,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 0,
+          "y": 5,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120011",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120011"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "topk(10, docker_container_mem_usage_percent{engine_host=~\"$engine_host\",container_name=~\"$container_name\"})",
+            "legend": "{{engine_host}} / {{container_name}}"
+          }
+        ],
+        "name": "内存使用率 Top10",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {
+            "unit": "percent"
+          },
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.3,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 12,
+          "y": 5,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120012",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120012"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "docker_container_mem_usage{engine_host=~\"$engine_host\",container_name=~\"$container_name\"}",
+            "legend": "{{engine_host}} / {{container_name}} usage"
+          },
+          {
+            "refId": "B",
+            "expr": "docker_container_mem_limit{engine_host=~\"$engine_host\",container_name=~\"$container_name\"}",
+            "legend": "{{engine_host}} / {{container_name}} limit"
+          }
+        ],
+        "name": "容器内存使用 / 限制",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {
+            "unit": "bytes"
+          },
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 0,
+          "y": 11,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120013",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120013"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "100 * rate(docker_container_cpu_throttling_throttled_periods{engine_host=~\"$engine_host\",container_name=~\"$container_name\",cpu=\"cpu-total\"}[5m]) / clamp_min(rate(docker_container_cpu_throttling_periods{engine_host=~\"$engine_host\",container_name=~\"$container_name\",cpu=\"cpu-total\"}[5m]), 1)",
+            "legend": "{{engine_host}} / {{container_name}}"
+          }
+        ],
+        "name": "CPU 限流周期占比",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {
+            "unit": "percent"
+          },
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 12,
+          "y": 11,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120014",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120014"
+      },
+      {
+        "type": "row",
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120015",
+        "name": "网络与磁盘 IO",
+        "collapsed": true,
+        "layout": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 17,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120015",
+          "isResizable": false
+        }
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_rx_bytes{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} rx"
+          },
+          {
+            "refId": "B",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_tx_bytes{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} tx"
+          }
+        ],
+        "name": "网络吞吐",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {
+            "unit": "bytes/s"
+          },
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 0,
+          "y": 18,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120016",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120016"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_rx_packets{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} rx"
+          },
+          {
+            "refId": "B",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_tx_packets{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} tx"
+          }
+        ],
+        "name": "网络包速率",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {},
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 12,
+          "y": 18,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120017",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120017"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_rx_errors{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} rx_errors"
+          },
+          {
+            "refId": "B",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_tx_errors{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} tx_errors"
+          },
+          {
+            "refId": "C",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_rx_dropped{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} rx_dropped"
+          },
+          {
+            "refId": "D",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_net_tx_dropped{engine_host=~\"$engine_host\",container_name=~\"$container_name\",network=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} tx_dropped"
+          }
+        ],
+        "name": "网络错误 / 丢包",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {},
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 0,
+          "y": 24,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120018",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120018"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_blkio_io_service_bytes_recursive_read{engine_host=~\"$engine_host\",container_name=~\"$container_name\",device=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} read"
+          },
+          {
+            "refId": "B",
+            "expr": "sum by (engine_host, container_name) (rate(docker_container_blkio_io_service_bytes_recursive_write{engine_host=~\"$engine_host\",container_name=~\"$container_name\",device=\"total\"}[5m]))",
+            "legend": "{{engine_host}} / {{container_name}} write"
+          }
+        ],
+        "name": "Block IO 吞吐",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {
+            "unit": "bytes/s"
+          },
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 12,
+          "x": 12,
+          "y": 24,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120019",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120019"
+      },
+      {
+        "type": "row",
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120020",
+        "name": "状态与健康",
+        "collapsed": true,
+        "layout": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 30,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120020",
+          "isResizable": false
+        }
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "topk(10, docker_container_status_restart_count{engine_host=~\"$engine_host\",container_name=~\"$container_name\"})",
+            "legend": "{{engine_host}} / {{container_name}}"
+          }
+        ],
+        "name": "重启次数 Top10",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {},
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 8,
+          "x": 0,
+          "y": 31,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120021",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120021"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "docker_container_status_uptime{engine_host=~\"$engine_host\",container_name=~\"$container_name\"} / 3600",
+            "legend": "{{engine_host}} / {{container_name}}"
+          }
+        ],
+        "name": "容器运行时长",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {
+            "unit": "hours"
+          },
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 8,
+          "x": 8,
+          "y": 31,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120022",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120022"
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "docker_container_health_status{engine_host=~\"$engine_host\",container_name=~\"$container_name\"}",
+            "legend": "{{engine_host}} / {{container_name}}"
+          }
+        ],
+        "name": "健康状态",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {},
+          "valueMappings": [
+            {
+              "type": "special",
+              "match": {
+                "special": 0
+              },
+              "result": {
+                "text": "healthy",
+                "color": "#417505"
+              }
+            },
+            {
+              "type": "special",
+              "match": {
+                "special": 1
+              },
+              "result": {
+                "text": "starting",
+                "color": "#F5A623"
+              }
+            },
+            {
+              "type": "special",
+              "match": {
+                "special": 2
+              },
+              "result": {
+                "text": "unhealthy",
+                "color": "#D0021B"
+              }
+            }
+          ],
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "stepAfter",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 8,
+          "x": 16,
+          "y": 31,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120023",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120023"
+      },
+      {
+        "type": "row",
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120024",
+        "name": "Swarm 可选指标",
+        "collapsed": true,
+        "layout": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 37,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120024",
+          "isResizable": false
+        }
+      },
+      {
+        "targets": [
+          {
+            "refId": "A",
+            "expr": "docker_swarm_tasks_running{engine_host=~\"$engine_host\"}",
+            "legend": "{{engine_host}} / {{service_name}} running"
+          },
+          {
+            "refId": "B",
+            "expr": "docker_swarm_tasks_desired{engine_host=~\"$engine_host\"}",
+            "legend": "{{engine_host}} / {{service_name}} desired"
+          }
+        ],
+        "name": "Swarm 服务副本",
+        "options": {
+          "tooltip": {
+            "mode": "all",
+            "sort": "none"
+          },
+          "legend": {
+            "displayMode": "list"
+          },
+          "standardOptions": {},
+          "thresholds": {}
+        },
+        "custom": {
+          "drawStyle": "lines",
+          "lineInterpolation": "smooth",
+          "fillOpacity": 0.2,
+          "stack": "off"
+        },
+        "version": "2.0.0",
+        "type": "timeseries",
+        "layout": {
+          "h": 6,
+          "w": 24,
+          "x": 0,
+          "y": 38,
+          "i": "9d4f13f2-7e29-4f70-9c16-d6b3d8120025",
+          "isResizable": true
+        },
+        "id": "9d4f13f2-7e29-4f70-9c16-d6b3d8120025"
+      }
+    ]
+  }
+}

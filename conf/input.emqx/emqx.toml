@@ -14,3 +14,11 @@
 # enable_meterics=true
 
  
+ [[instances]]
+# labels = { instance="emqx@192.168.1.100"}
+# api = "http://192.168.1.100:8081/api/v4"
+# user="admin"
+# password="public"
+# #集群节点名称
+# nodename="emqx@192.168.1.100"
+# enable_meterics=true
